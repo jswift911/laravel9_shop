@@ -51,7 +51,7 @@ class RouteServiceProvider extends ServiceProvider
                 ->by($request->user()?->id ?: $request->ip())
                 ->response(function (Request $request, array $headers) {
                     // Response::HTTP_TOO_MANY_REQUESTS = 429 status
-                    return response('Полегче брат', Response::HTTP_TOO_MANY_REQUESTS, $headers);
+                    return response('Take it easy', Response::HTTP_TOO_MANY_REQUESTS, $headers);
                 });
         });
 

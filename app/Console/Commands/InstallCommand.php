@@ -6,27 +6,16 @@ use Illuminate\Console\Command;
 
 class InstallCommand extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'command:name';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $signature = 'shop:install';
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    protected $description = 'Installation';
+
+    public function handle() : int
     {
-        return Command::SUCCESS;
+        $this->call('storage:link');
+        $this->call('migrate');
+
+        return self::SUCCESS;
     }
 }
