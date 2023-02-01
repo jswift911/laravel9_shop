@@ -3,6 +3,7 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -43,6 +44,7 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
+        // Отправляет ошибки в sentry, telescope и подобные
         $this->reportable(function (Throwable $e) {
             $this->reportable(function (Throwable $e) {
                 if (app()->bound('sentry')) {
@@ -50,5 +52,12 @@ class Handler extends ExceptionHandler
                 }
             });
         });
+
+
+        // Можно создавать 404 ошибки не через views (главное возвращать через response)
+//        $this->renderable(function (NotFoundHttpException $e) {
+//            return response()
+//                ->view('welcome');
+//        });
     }
 }

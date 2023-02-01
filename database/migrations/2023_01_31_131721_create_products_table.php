@@ -21,12 +21,13 @@ return new class extends Migration
             //Только положительный int, по умолчанию 0
             $table->unsignedInteger('price')->default(0);
 
-            //constrained - внешний ключ в БД для контроля, если будем удалять или обновлять связанные(используемые)
-            // записи, нам этого БД не позволит. Также если удалим родительскую запись, то удалятся и дочерние.
+            //constrained - внешний ключ в БД для контроля, если будем обновлять связанные(используемые)
+            // записи, нам этого БД не позволит. Также если удалим бренд, то у всех товаров проставится null.
             $table->foreignIdFor(Brand::class)
+                ->nullable()
                 ->constrained()
                 ->cascadeOnUpdate()
-                ->cascadeOnDelete();
+                ->nullOnDelete();
 
             $table->timestamps();
         });

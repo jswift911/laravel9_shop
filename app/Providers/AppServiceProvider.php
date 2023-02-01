@@ -12,43 +12,57 @@ use Illuminate\Support\Facades\DB;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     *
-     * @return void
-     */
-    public function register()
+
+    public function register() : void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot() : void
     {
-        Model::preventLazyLoading(!app()->isProduction());
-        Model::preventSilentlyDiscardingAttributes(!app()->isProduction());
+        //ShouldBeStrict - выдает больше сведений об ошибках (например если нет переменной в blade-шаблоне)
+        // аналог use strict в js
+        Model::shouldBeStrict(!app()->isProduction());
 
-        DB::whenQueryingForLongerThan(500, function (Connection $connection, QueryExecuted $event) {
-            logger()
-                ->channel('telegram')
-                ->debug('whenQueryingForLongerThan: ' . $connection->query()->toSql());
+        if (app()->isProduction()) {
 
-        });
+            //Если долгий коннект (не сами запросы, а именно коннект), то логируем через телеграм бот. Если использовать
+            // данный вариант через очереди, то будет бесконечный цикл, поэтому второй вариант listen лучше.
+            // 1-ый вариант
+//            DB::whenQueryingForLongerThan(CarbonInterval::seconds(5), function (Connection $connection, QueryExecuted $event) {
+//                logger()
+//                    ->channel('telegram')
+//                    ->debug('whenQueryingForLongerThan: ' . $connection->totalQueryDuration());
+//
+//            });
 
-        // Большая типизация через Carbon, чем через примитив (например: int 20)
-        $kernel = app(Kernel::class);
-        $kernel->whenRequestLifecycleIsLongerThan(
-            CarbonInterval::seconds(4),
-            function () {
-                logger()
-                    ->channel('telegram')
-                    ->debug('whenRequestLifecycleIsLongerThan: '. request()->url());
+            // Логи именно запросов
+            // 2-ой вариант
+            DB::listen(function ($query) {
+            //Включить логи всех запросов (в т.ч. терминал) $query->sql;
+            //Включить логи всех биндингов (в т.ч. терминал) $query->bindings;
+            //Включить логи времени выполнения запросов (в т.ч. терминал) $query->time;
 
-            }
-        );
+                if($query->time > 1000) {
+                    logger()
+                        ->channel('telegram')
+                        ->debug('Query longer than 1s: ' . $query->sql, $query->bindings);
+
+                }
+
+            //dump($query->time);
+            });
+
+            // Большая типизация через Carbon, чем через примитив (например: int 20)
+            app(Kernel::class)->whenRequestLifecycleIsLongerThan(
+                CarbonInterval::seconds(4),
+                function () {
+                    logger()
+                        ->channel('telegram')
+                        ->debug('whenRequestLifecycleIsLongerThan: '. request()->url());
+
+                }
+            );
+        }
     }
 }
