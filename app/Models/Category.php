@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Models\HasSlug;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,21 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 class Category extends Model
 {
     use HasFactory;
+    use HasSlug;
 
     protected $fillable = [
         'title',
     ];
-
-    // Установка значения поля на момент создания объекта модели
-    protected static function boot()
-    {
-        parent::boot();
-
-        //Событие перед созданием -> если нет слага, то генерируем
-        static::creating(function (Category $category) {
-            $category->slug = $category->slug ?? str($category->title)->slug();
-        });
-    }
 
     public function products() : BelongsToMany
     {
