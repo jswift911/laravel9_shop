@@ -1,0 +1,12 @@
+@extends('layouts.auth')
+
+@section('content')
+    {{--Показ формы только если авторизованы--}}
+    @auth
+    <form method="post" action="{{route('logOut')}}">
+        @csrf
+        @method('DELETE')
+        <button type="submit">Выйти</button>
+    </form>
+    @endauth
+@endsection
