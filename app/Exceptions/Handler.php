@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use DomainException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
@@ -53,6 +54,11 @@ class Handler extends ExceptionHandler
             });
         });
 
+        $this->renderable(function (DomainException $e) {
+            flash()->alert($e->getMessage());
+
+            return back();
+        });
 
         // Можно создавать 404 ошибки не через views (главное возвращать через response)
 //        $this->renderable(function (NotFoundHttpException $e) {
