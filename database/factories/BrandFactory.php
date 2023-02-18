@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Brand;
+use Domain\Catalog\Models\Brand;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -15,6 +15,8 @@ class BrandFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    protected $model = Brand::class;
 
     //Генерация слцчайных данных
     public function definition(): array

@@ -1,8 +1,7 @@
 <?php
 
-namespace Tests\Feature\App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Auth\SignUpController;
 use App\Http\Requests\SignUpFormRequest;
 use App\Listeners\SendEmailNewUserListener;
 use App\Notifications\NewUserNotification;
@@ -14,6 +13,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
+
 
 class SignUpControllerTest extends TestCase
 {

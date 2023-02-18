@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Category;
+use Domain\Catalog\Models\Category;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -15,6 +15,8 @@ class CategoryFactory extends Factory
      *
      * @return array<string, mixed>
      */
+
+    protected $model = Category::class;
 
     //Генерация слцчайных данных
     public function definition() : array

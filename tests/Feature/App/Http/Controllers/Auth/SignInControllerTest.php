@@ -1,12 +1,12 @@
 <?php
 
-namespace Tests\Feature\App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Auth\SignInController;
 use App\Http\Requests\SignInFormRequest;
 use Database\Factories\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
+
 
 class SignInControllerTest extends TestCase
 {
